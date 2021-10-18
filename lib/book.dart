@@ -1,7 +1,7 @@
 class Book {
   final String id, title;
   final double? rating;
-  final String? thumbnail, publisher, publishedDate, mainCategory, description, link, buyLink;
+  final String? thumbnail, publisher, publishedDate, description, link, buyLink;
   final int? ratingsCount, pageCount;
   final Map? price;
   List? categories, authors = [];
@@ -9,9 +9,9 @@ class Book {
 
 
   Book({required this.id, required this.rating, required this.title, this.authors,
-    this.thumbnail, this.favFlag = false, this.categories, this.mainCategory,
-    this.description, this.ratingsCount, this.pageCount, this.link, this.buyLink,
-    this.price, this.publisher, this.publishedDate});
+    this.thumbnail, this.favFlag = false, this.categories, this.description,
+    this.ratingsCount, this.pageCount, this.link, this.buyLink, this.price,
+    this.publisher, this.publishedDate});
 }
 
 // // list of books

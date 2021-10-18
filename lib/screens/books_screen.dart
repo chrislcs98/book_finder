@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:book_finder/sliver_app_bar_delegate.dart';
 import 'package:book_finder/book.dart';
+import 'book_card.dart';
+import 'package:book_finder/constants.dart';
 
 import 'dart:convert';
 import 'dart:math';
@@ -33,9 +36,11 @@ class BooksScreen extends StatefulWidget {
   BooksScreenState createState() => BooksScreenState();
 }
 
-//enum SingingCharacter { name, location, price }
 
 class BooksScreenState extends State<BooksScreen> {
+  TextEditingController controller = TextEditingController();
+  // bool searchFlag = false;
+  bool favsFlag = false;
   List<Book> books = [];
   static const _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
@@ -43,10 +48,10 @@ class BooksScreenState extends State<BooksScreen> {
     super.initState();
 
     // var client = http.Client();
-    getBooks();
+    getBooks('');
   }
 
-  void getBooks({String query=''}) async {
+  void getBooks(String query) async {
     books.clear();
 
     // final _googleSignIn = GoogleSignIn(
@@ -62,9 +67,12 @@ class BooksScreenState extends State<BooksScreen> {
     // // var booksf = await booksApi.volumes.recommended.list();
     // // print(booksf);
 
-    var keywords = 'intitle,inauthor:';
+
+    // var keywords = '';
+    // bool randomFlag = false;
 
     if (query.isEmpty) {
+      randomFlag = true;
       Random _rnd = Random();
 
       String getRandomString(int length) =>
@@ -72,13 +80,13 @@ class BooksScreenState extends State<BooksScreen> {
               length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
       query = getRandomString(1);
-      keywords = '';
+      // keywords = '';
     }
 
     developer.log('Query: ' + query);
     // var url = Uri.parse('https://www.googleapis.com/books/v1/volumes?q=a&maxResults=40&printType=books&fields=totalItems,items(volumeInfo(title,averageRating))&key=' + dotenv.env['API_KEY']!);
     var url = Uri.parse('https://www.googleapis.com/books/v1/volumes?' +
-        'maxResults=40&printType=books&q=' + keywords + query +
+        'maxResults=40&printType=books&q=' + query +
         '&fields=totalItems,items(id,volumeInfo(title,authors,averageRating,' +
         'publisher,publishedDate,description,pageCount,ratingsCount,mainCategory,' +
         'categories,imageLinks/thumbnail,canonicalVolumeLink),saleInfo(buyLink,listPrice))' +
@@ -96,25 +104,37 @@ class BooksScreenState extends State<BooksScreen> {
     developer.log('Map: $decodedResponse');
 
     decodedResponse['items'].forEach((it) {
+      bool famousFlag = true;
       var vol = it['volumeInfo'];
-      Book book = Book(
-        id: it['id'],
-        title: vol['title'],
-        authors: vol['authors'],
-        rating: vol['averageRating']?.toDouble(),
-        ratingsCount: vol['ratingCount'],
-        publisher: vol['publisher'],
-        publishedDate: vol['publishedDate'],
-        description: vol['description'],
-        pageCount: vol['pageCount'],
-        categories: [vol['mainCategory'], ...?vol['categories']],
-        thumbnail: vol['thumbnail'],
-        link: vol['canonicalVolumeLink'],
-        buyLink: it['saleInfo']?['buyLink'],
-        price: it['saleInfo']?['listPrice']
-      );
-      // developer.log('${book.ratingsCount}');
-      books.add(book);
+      var rating = vol['averageRating']?.toDouble();
+
+      if (vol['title'] != null) {
+        // if (randomFlag && (rating == null || rating < 3)) {
+        //   famousFlag = false;
+        // }
+
+        if (famousFlag) {
+          Book book = Book(
+              id: it['id'],
+              title: vol['title'],
+              authors: vol['authors'],
+              rating: rating,
+              ratingsCount: vol['ratingCount'],
+              publisher: vol['publisher'],
+              publishedDate: vol['publishedDate'],
+              description: vol['description'],
+              pageCount: vol['pageCount'],
+              categories: [vol['mainCategory'], ...?vol['categories']],
+              thumbnail: vol['imageLinks']?['thumbnail'],
+              link: vol['canonicalVolumeLink'],
+              buyLink: it['saleInfo']?['buyLink'],
+              price: it['saleInfo']?['listPrice']
+          );
+          book.categories!.removeWhere((value) => value == null);
+          // developer.log('${book.ratingsCount}');
+          books.add(book);
+        }
+      }
     });
 
     setState(() {});
@@ -122,7 +142,109 @@ class BooksScreenState extends State<BooksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    // It will provide us total height and width of our screen
+    Size size = MediaQuery.of(context).size;
 
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverFixedExtentList(
+            itemExtent: 120.0,
+            delegate: SliverChildListDelegate(
+              [
+                const Padding(
+                  padding: EdgeInsets.only(left: 20, top: 50, right: 20),
+                  child: Text(
+                    "Explore thousands of books on the go",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+                  )
+                )
+              ],
+            ),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: SliverAppBarDelegate(
+              minHeight: 140.0,
+              maxHeight: 140.0,
+              child: Container(
+                color: kBackgroundColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 35, right: 20, bottom: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: kBackgroundColor,
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0,3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        // color: kBackgroundColor.withOpacity(0.8),
+                        child: ListTile(
+                          leading: const Icon(Icons.search),
+                          title: TextField(
+                            controller: controller,
+                            decoration: const InputDecoration(
+                              hintText: 'Search for books...',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: getBooks,
+                          ),
+                          trailing: IconButton(
+                              icon: const Icon(Icons.cancel),
+                              onPressed: () {
+                                controller.clear();
+                                getBooks('');
+                              }
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 23, right: 20, bottom: 0),
+                      child: Text(
+                        favsFlag ? "Favourites Books" : "Famous Books",
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      )
+                    ),
+                  ]
+                ),
+              ),
+            ),
+          ),
+          SliverFixedExtentList(
+              itemExtent: 260,
+              delegate:
+              SliverChildBuilderDelegate((BuildContext context, int index) {
+                return !favsFlag ?
+                  BookCard(
+                      itemIndex: index,
+                      book: books[index],
+                      press: () {},
+                      parent: this
+                  )
+                : (books[index].favFlag ?
+                    BookCard(
+                        itemIndex: index,
+                        book: books[index],
+                        press: () {},
+                        parent: this
+                    )
+                  : Container());
+              },
+              childCount: books.length)
+          ),
+        ],
+      )
+    );
   }
 }
