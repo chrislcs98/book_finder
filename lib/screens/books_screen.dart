@@ -72,7 +72,7 @@ class BooksScreenState extends State<BooksScreen> {
     // bool randomFlag = false;
 
     if (query.isEmpty) {
-      randomFlag = true;
+      // randomFlag = true;
       Random _rnd = Random();
 
       String getRandomString(int length) =>
