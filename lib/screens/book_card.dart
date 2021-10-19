@@ -95,99 +95,99 @@ class _BookCardState extends State<BookCard> {
                 // our image take 200 width, that's why we set out total width - 200
                 width: size.width - 190,
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      // Book Author
-                      widget.book.authors != null ?
-                      Tooltip(
-                        message: widget.book.authors![0],
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: kDefaultPadding*2,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding,
-                              vertical: kDefaultPadding/4
-                          ),
-                          child: Text(
-                            "by " + widget.book.authors![0],
-                            style: Theme.of(context).textTheme.caption,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis
-                          ),
-                        ),
-                      ) : Container(),
-                      // Book Title
-                      Tooltip(
-                        message: widget.book.title,
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: kDefaultPadding*2,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding,
-                              vertical: kDefaultPadding/4
-                          ),
-                          child: Text(
-                            widget.book.title,
-                            style: Theme.of(context).textTheme.headline6,
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis
-                          )
-                        )
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Book Author
+                    widget.book.authors != null ?
+                    Tooltip(
+                      message: widget.book.authors![0],
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding*2,
                       ),
-                      // Book Rating
-                      widget.book.rating != null ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding,
-                              vertical: kDefaultPadding/4
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 15
-                            ),
-                            Text(
-                              " ${widget.book.rating}",
-                              style: Theme.of(context).textTheme.caption,
-                            )
-                          ]
-                        )
-                      ) : Container(),
-                      // Book Category,
-                      widget.book.categories!.isNotEmpty ? Padding(
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: kDefaultPadding,
-                            vertical: kDefaultPadding/2
+                            vertical: kDefaultPadding/4
                         ),
-                        child: Tooltip(
-                          message: widget.book.categories![0],
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: kDefaultPadding*2,
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: kDefaultPadding/2,
-                                vertical: kDefaultPadding/5
-                            ),
-                            decoration: BoxDecoration(
-                              color: kBlueColor.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Text(
-                              widget.book.categories![0],
-                              style: const TextStyle(fontSize: 11, color: kPrimaryColor, fontWeight: FontWeight.bold),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            )
-                          ),
+                        child: Text(
+                          "by " + widget.book.authors![0],
+                          style: Theme.of(context).textTheme.caption,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis
+                        ),
+                      ),
+                    ) : Container(),
+                    // Book Title
+                    Tooltip(
+                      message: widget.book.title,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding*2,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kDefaultPadding,
+                            vertical: kDefaultPadding/4
+                        ),
+                        child: Text(
+                          widget.book.title,
+                          style: Theme.of(context).textTheme.headline6,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis
                         )
-                      ) : Container(),
-                    ]
+                      )
+                    ),
+                    // Book Rating
+                    widget.book.rating != null ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                            horizontal: kDefaultPadding,
+                            vertical: kDefaultPadding/4
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 15
+                          ),
+                          Text(
+                            " ${widget.book.rating}",
+                            style: Theme.of(context).textTheme.caption,
+                          )
+                        ]
+                      )
+                    ) : Container(),
+                    // Book Category,
+                    widget.book.categories!.isNotEmpty ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding,
+                          vertical: kDefaultPadding/2
+                      ),
+                      child: Tooltip(
+                        message: widget.book.categories![0],
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding*2,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kDefaultPadding/2,
+                              vertical: kDefaultPadding/5
+                          ),
+                          decoration: BoxDecoration(
+                            color: kBlueColor.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            widget.book.categories![0],
+                            style: const TextStyle(fontSize: 11, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          )
+                        ),
+                      )
+                    ) : Container(),
+                  ]
                 ),
               ),
             ),

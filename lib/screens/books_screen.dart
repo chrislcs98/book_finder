@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:book_finder/sliver_app_bar_delegate.dart';
 import 'package:book_finder/book.dart';
+import 'package:flutter/rendering.dart';
 import 'book_card.dart';
 import 'package:book_finder/constants.dart';
 
@@ -11,10 +12,11 @@ import 'dart:developer' as developer;
 
 // APIs
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/io_client.dart';
 import "package:googleapis_auth/auth_io.dart";
 import 'package:googleapis/books/v1.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 
@@ -35,7 +37,6 @@ class BooksScreen extends StatefulWidget {
   @override
   BooksScreenState createState() => BooksScreenState();
 }
-
 
 class BooksScreenState extends State<BooksScreen> {
   TextEditingController controller = TextEditingController();
@@ -101,7 +102,7 @@ class BooksScreenState extends State<BooksScreen> {
     // developer.log('Response body: ${response.body}');
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    developer.log('Map: $decodedResponse');
+    // developer.log('Map: $decodedResponse');
 
     decodedResponse['items'].forEach((it) {
       bool famousFlag = true;
@@ -150,14 +151,29 @@ class BooksScreenState extends State<BooksScreen> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverFixedExtentList(
-            itemExtent: 120.0,
+            itemExtent: 150.0,
             delegate: SliverChildListDelegate(
               [
-                const Padding(
-                  padding: EdgeInsets.only(left: 20, top: 50, right: 20),
-                  child: Text(
-                    "Explore thousands of books on the go",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                          icon: const Icon(Icons.logout_rounded),
+                          alignment: Alignment.topLeft,
+                          color: Colors.blueGrey,
+                          tooltip: "Logout",
+                          onPressed: () async {
+                            await FirebaseAuth.instance.signOut();
+                          },
+                      ),
+                      const Text(
+                        "Explore thousands of books on the go",
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+                      ),
+                    ],
                   )
                 )
               ],
