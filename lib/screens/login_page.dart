@@ -211,90 +211,85 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          child: Stack(
-            children: [
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xff65b0bb),
-                      Color(0xff5a9ea8),
-                      Color(0xff508c95),
-                      Color(0xff467b82),
-                      Color(0xff3c6970),
-                      Color(0xff32585d),
-                      Color(0xff28464a),
-                    ],
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: SingleChildScrollView(
-                    child: Column(
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xff65b0bb),
+                  Color(0xff5a9ea8),
+                  Color(0xff508c95),
+                  Color(0xff467b82),
+                  Color(0xff3c6970),
+                  Color(0xff32585d),
+                  Color(0xff28464a),
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    Container(
+                      width: 130,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.asset(
+                        "assets/images/book_finder_logo.png",
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Book Finder",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    buildEmail(),
+                    const SizedBox(height: 15),
+                    buildPassword(),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(height: 40),
-                        Container(
-                          width: 130,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                          child: Image.asset(
-                            "assets/images/book_finder_logo.png",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Book Finder",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        buildEmail(),
-                        const SizedBox(height: 15),
-                        buildPassword(),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            buildEmailVerification(),
-                            buildForgetPassword()
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        buildLoginButton(),
-                        buildSignupButton(),
-                        const SizedBox(height: 20),
-                        buildGoogle(),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     buildFacebook(),
-                        //     buildGoogle(),
-                        //     buildTwitter()
-                        //   ],
-                        // ),
-                        // const SizedBox(height: 20),
-                        // Text("Book Finder",style: TextStyle(color: Colors.white,fontSize: 10))
+                        buildEmailVerification(),
+                        buildForgetPassword()
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 5),
+                    buildLoginButton(),
+                    buildSignupButton(),
+                    const SizedBox(height: 20),
+                    buildGoogle(),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     buildFacebook(),
+                    //     buildGoogle(),
+                    //     buildTwitter()
+                    //   ],
+                    // ),
+                    // const SizedBox(height: 20),
+                    // Text("Book Finder",style: TextStyle(color: Colors.white,fontSize: 10))
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
 
@@ -369,7 +364,7 @@ class _LoginPageState extends State<LoginPage> {
           style: TextStyle(
             color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(height: 10),
         Container(
           height: 60,
           alignment: Alignment.centerLeft,

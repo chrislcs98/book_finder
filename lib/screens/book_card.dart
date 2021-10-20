@@ -24,8 +24,6 @@ class BookCard extends StatefulWidget {
 }
 
 class _BookCardState extends State<BookCard> {
-  var snackBar;
-
   @override
   Widget build(BuildContext context) {
     // It will provide us total height and width of our screen
@@ -39,7 +37,7 @@ class _BookCardState extends State<BookCard> {
       height: 260,
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
-        onTap: widget.press(),
+        onTap: () => widget.press(),
         splashColor: kBlueColor,
         child: Stack(
           alignment: Alignment.bottomCenter,
@@ -99,7 +97,7 @@ class _BookCardState extends State<BookCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     // Book Author
-                    widget.book.authors != null ?
+                    widget.book.authors != null &&  widget.book.authors!.isNotEmpty ?
                     Tooltip(
                       message: widget.book.authors![0],
                       margin: const EdgeInsets.symmetric(

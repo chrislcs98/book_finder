@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         }
 
-        // Otherwise, show something whilst waiting for initialization to complete
+        // Otherwise, show message whilst waiting for initialization to complete
         return LoginPage(snackMsg: "Connecting to the app ... (Wait)");
       },
     );

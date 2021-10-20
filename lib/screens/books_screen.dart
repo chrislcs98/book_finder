@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'book_card.dart';
 import 'package:book_finder/constants.dart';
+import 'package:book_finder/screens/book_details.dart';
 
 import 'dart:convert';
 import 'dart:math';
@@ -262,21 +263,31 @@ class BooksScreenState extends State<BooksScreen> {
               itemExtent: 260,
               delegate:
               SliverChildBuilderDelegate((BuildContext context, int index) {
-                return !favsFlag ?
-                  BookCard(
+                if (!favsFlag) {
+                  return BookCard(
+                    itemIndex: index,
+                    book: books[index],
+                    press: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                              BookDetails(books[index])));
+                    },
+                    parent: this
+                  );
+                } else {
+                  return (books[index].favFlag ?
+                    BookCard(
                       itemIndex: index,
                       book: books[index],
-                      press: () {},
+                      press: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) =>
+                                BookDetails(books[index])));
+                      },
                       parent: this
-                  )
-                : (books[index].favFlag ?
-                    BookCard(
-                        itemIndex: index,
-                        book: books[index],
-                        press: () {},
-                        parent: this
                     )
                   : Container());
+                }
               },
               childCount: books.length)
           ),
