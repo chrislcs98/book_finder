@@ -52,6 +52,10 @@ class BooksScreenState extends State<BooksScreen> {
     getBooks('');
   }
 
+  void setStateIfMounted() {
+    if (mounted) setState(() {});
+  }
+
   void getBooks(String query) async {
     books.clear();
 
@@ -138,7 +142,7 @@ class BooksScreenState extends State<BooksScreen> {
       }
     });
 
-    setState(() {});
+    setStateIfMounted();
   }
 
   @override

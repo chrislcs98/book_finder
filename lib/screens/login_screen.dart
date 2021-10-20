@@ -4,10 +4,10 @@ import 'package:book_finder/screens/books_screen.dart';
 import 'package:flutter/rendering.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key, this.msgTitle, this.msgContent}) : super(key: key);
+  LoginScreen({Key? key, this.msgTitle, this.msgContent}) : super(key: key);
 
-  final String? msgTitle;
-  final String? msgContent;
+  String? msgTitle;
+  String? msgContent;
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,7 +16,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late String _email, _password;
 
-  _checkAuthentication() async {
+  void setStateIfMounted() {
+    if (mounted) setState(() {});
+  }
+
+  _showAlert() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -26,16 +30,41 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 25,
         backgroundColor: widget.msgTitle! == "Error" ? Colors.red.withOpacity(0.85) :
           Colors.lightBlueAccent.withOpacity(0.85),
+        actions: [
+          widget.msgTitle == "Waiting for Email Verification" ? TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _checkUser();
+            },
+            child: const Text('Done'),
+          ) : Container(),
+        ],
       )
     );
+
+    // setStateIfMounted();
   }
 
-  Future<String?> _createUser() async {
+  Future<void> _createUser() async {
     try {
       UserCredential userCredential = await FirebaseAuth
           .instance
           .createUserWithEmailAndPassword(email: _email, password: _password);
-      print("User: $userCredential");
+      // print("User: $userCredential");
+
+      // Check if user's email is verified
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+
+        widget.msgTitle = "Waiting for Email Verification";
+        widget.msgContent = "Verify your email through the link in your email account.";
+
+        await FirebaseAuth.instance.signOut();
+        return _showAlert();
+      }
+
     } on FirebaseAuthException catch (e) {
       print("Error $e");
       if (e.code == 'weak-password') {
@@ -56,10 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
       print("User: $userCredential");
 
       // Check if user's email is verified
+      await FirebaseAuth.instance.currentUser?.reload();
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null && !user.emailVerified) {
-        await user.sendEmailVerification();
+        // await user.sendEmailVerification();
+        await FirebaseAuth.instance.signOut();
       }
     } on FirebaseAuthException catch (e) {
       print("Error $e");
@@ -107,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialButton(
                     onPressed: () {
                       if (widget.msgTitle != null) {
-                        _checkAuthentication();
+                        _showAlert();
                       } else {
                         _checkUser();
                         // Navigator.push(
@@ -121,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialButton(
                     onPressed: () {
                       if (widget.msgTitle != null) {
-                        _checkAuthentication();
+                        _showAlert();
                       } else {
                         _createUser();
                       }

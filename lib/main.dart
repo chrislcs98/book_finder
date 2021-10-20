@@ -73,11 +73,30 @@ class _MyHomePageState extends State<MyHomePage> {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
-                User? user = snapshot.data as User?;
+                // User? user = snapshot.data as User?;
+                FirebaseAuth.instance.currentUser?.reload();
+                User? user = FirebaseAuth.instance.currentUser;
 
                 if (user == null) {
                   return LoginScreen();
                 } else {
+                  // Check if user's email is verified
+                  print(user);
+                  print(user.emailVerified);
+
+                  if (!user.emailVerified) {
+                    try {
+                      user.sendEmailVerification();
+                      FirebaseAuth.instance.signOut();
+                    } catch (e) {
+                      print("Error $e");
+                    }
+
+                    return LoginScreen(
+                        msgTitle: "Waiting for Email Verification",
+                        msgContent: "Verify your email through the link in your email account."
+                    );
+                  }
                   return BooksScreen();
                 }
               }
