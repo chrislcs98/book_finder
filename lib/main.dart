@@ -1,5 +1,6 @@
 import 'package:book_finder/screens/books_screen.dart';
 import 'package:book_finder/screens/login_screen.dart';
+import 'package:book_finder/screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -64,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return LoginScreen(msgTitle: "Error", msgContent: "${snapshot.error?? ""}\n(Wait or Restart the app)");
+          print(snapshot.error);
+          return LoginPage(snackMsg: "Network Connection Failed");
         }
 
         // Once complete, show your application
@@ -77,38 +79,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 FirebaseAuth.instance.currentUser?.reload();
                 User? user = FirebaseAuth.instance.currentUser;
 
-                if (user == null) {
-                  return LoginScreen();
-                } else {
-                  // Check if user's email is verified
-                  print(user);
-                  print(user.emailVerified);
-
-                  if (!user.emailVerified) {
-                    try {
-                      user.sendEmailVerification();
-                      FirebaseAuth.instance.signOut();
-                    } catch (e) {
-                      print("Error $e");
-                    }
-
-                    return LoginScreen(
-                        msgTitle: "Waiting for Email Verification",
-                        msgContent: "Verify your email through the link in your email account."
-                    );
-                  }
+                if (user != null && user.emailVerified) {
+                  // // Check if user's email is verified
+                  // print(user);
+                  // print(user.emailVerified);
+                  //
+                  // if (!user.emailVerified) {
+                  //   try {
+                  //     FirebaseAuth.instance.signOut();
+                  //   } catch (e) {
+                  //     print("Error $e");
+                  //   }
+                  //   return LoginPage();
+                  // }
                   return BooksScreen();
+                } else {
+                  return LoginPage();
                 }
               }
 
               // Checking Authentication ...
-              return LoginScreen(msgTitle: "Wait", msgContent: "Checking Authentication ...");
+              return LoginPage(snackMsg: "Checking Authentication ... (Wait)");
             },
           );
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return LoginScreen(msgTitle: "Wait", msgContent: "Connecting to the app ...");
+        return LoginPage(snackMsg: "Connecting to the app ... (Wait)");
       },
     );
   }

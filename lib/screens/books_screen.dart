@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:book_finder/sliver_app_bar_delegate.dart';
 import 'package:book_finder/book.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'book_card.dart';
 import 'package:book_finder/constants.dart';
 
@@ -165,7 +166,23 @@ class BooksScreenState extends State<BooksScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       IconButton(
-                          icon: const Icon(Icons.logout_rounded),
+                          icon: Container(
+                            height: 40,
+                            width: 40,
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              // border: Border.all(),
+                              boxShadow: [BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0,3),
+                              )],
+                              color: Colors.white.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: const Icon(Icons.logout_rounded)
+                          ),
                           alignment: Alignment.topLeft,
                           color: Colors.blueGrey,
                           tooltip: "Logout",
