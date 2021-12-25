@@ -1,4 +1,4 @@
-# book_finder
+# Book Finder Application
 
 Search for your favourite books.
 
